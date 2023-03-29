@@ -1,0 +1,32 @@
+version: '3'
+
+services:
+  mysql:
+    image: mysql:1.0
+    restart: unless-stopped
+    volumes:
+      - mysql-data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    networks:
+      - relay-net
+
+  relay:
+    image: relay-server:1.0.2
+    restart: unless-stopped
+    volumes:
+      - server-data:/usr/src/app/Volumns
+    ports:
+      - "1337:1337"
+    networks:
+      - relay-net
+    environment:
+      RELAY_DB_TYPE: mysql
+      RELAY_DB_CONNECTION_STRING: mysql://root:rootpassword@mysql:3306/relaydb
+
+networks:
+  relay-net:
+
+volumes:
+  mysql-data:
+  server-data:
